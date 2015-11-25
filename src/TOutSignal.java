@@ -18,16 +18,20 @@ public class TOutSignal {
 	
 	public String print() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("right: ");
 		sb.append(this.rd);
 		sb.append(" ");
 		sb.append(this.rv);
 		sb.append(" ");
+		sb.append("down: ");
 		sb.append(this.dd);
 		sb.append(" ");
 		sb.append(this.dv);
 		sb.append(" ");
+		sb.append("up bp");
 		sb.append(this.us);
 		sb.append(" ");
+		sb.append("left bp");
 		sb.append(this.ls);
 		return sb.toString();
 		
