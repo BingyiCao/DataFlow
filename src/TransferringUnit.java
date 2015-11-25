@@ -1,19 +1,19 @@
 
 public class TransferringUnit {
-	int rdl;
-	boolean rvl;
-	int ddl;
-	boolean dvl;
-	boolean usl;
-	boolean lsl;
+	int odl;
+	boolean ovl;
+	int odl0;
+	boolean ovl0;
+	boolean ins;
+	boolean ins0;
 	inPriority ip;
 	outPriority op;
 	
 	public TransferringUnit() {
-		this.rvl = false;
-		this.dvl = false;
-		this.usl = false;
-		this.lsl = false;
+		this.ovl0 = false;
+		this.ovl0 = false;
+		this.ins = false;
+		this.ins0 = false;
 		this.ip = inPriority.left;
 		this.op = outPriority.right;
 	}
@@ -32,69 +32,117 @@ public class TransferringUnit {
 		boolean dv = false;
 		boolean us = false;
 		boolean ls = false;
-		if (!rs && this.rvl) {
-			rd = this.rdl;
-			rv = this.rvl;
-			this.rvl = false;
-		}
-		if (!ds && this.dvl) {
-			dd = this.ddl;
-			dv = this.dvl;
-			this.dvl = false;
-		}
-		if (this.lsl) ls = true;
-		if (this.usl) us = true;
-		//case 0: no input, do nothing
-		//case 1: 1 input, matter A or B
-		if ((uv&&!this.usl)^(lv&&!this.lsl)) {
-			if (this.op== outPriority.right) {
-				if (!this.rvl) {
-					this.rdl = uv?ud:ld;
-					this.rvl = true;
-				} else {
-					this.ddl = uv?ud:ld;
-					this.dvl = true;
-				}
-			} else {
-				if (!this.dvl) {
-				this.ddl = uv?ud:ld;
-				this.dvl = true;
-				} else {
-					this.rdl = uv?ud:ld;
-					this.rvl = true;
-				}
-			}
-		}
-		//case 2: 2 input, matter AC, BC, AD, BD
-		if ((uv&&!this.usl)&&(lv&&!this.lsl)) {
-			//A right, B down, C up, D left
-			if ((this.ip== inPriority.up&&this.op==outPriority.right)&&(this.ip == inPriority.left&&this.op==outPriority.down)) {
-				//up->right
-				this.rdl = ud;
-				this.rvl = uv;
-				this.ddl = ld;
-				this.dvl = lv;
+		if (this.op == outPriority.right) {
+			if (!rs) {
+			if (this.ovl) {
+				rd = this.odl;
+				rv = this.ovl;
+				this.ovl = false;
+				if (!ds && this.ovl0) {
+					dd = this.odl0;
+					dv = this.ovl0;
+					this.ovl0 = false;
+				} 
 			}
 			else {
-				this.rdl = ld;
-				this.rvl = lv;
-				this.ddl = ud;
-				this.dvl = uv;
+				rd = this.odl0;
+				rv = this.ovl0;
+				this.ovl0 = false;
+			}
+			}
+			else if (!ds){
+				if (this.ovl) {
+					dd = this.odl;
+					dv = this.ovl;
+					this.ovl = false;
+				}
+				else {
+					dd = this.odl0;
+					dv = this.ovl0;
+					this.ovl0 = false;
+				}
 			}
 		}
-		//backpressure
-		if ((rs&this.rvl)&&(ds&&this.dvl) ) {
-			this.lsl = true;
-			this.lsl = true;
+		else {
+			if (!ds) {
+				if (this.ovl) {
+					dd = this.odl;
+					dv = this.ovl;
+					this.ovl = false;
+					if (!rs && this.ovl0) {
+						rd = this.odl0;
+						rv = this.ovl0;
+						this.ovl0 = false;
+					} 
+				}
+				else {
+					dd = this.odl0;
+					dv = this.ovl0;
+					this.ovl0 = false;
+				}
+				}
+				else if (!rs){
+					if (this.ovl) {
+						rd = this.odl;
+						rv = this.ovl;
+						this.ovl = false;
+					}
+					else {
+						rd = this.odl0;
+						rv = this.ovl0;
+						this.ovl0 = false;
+					}
+				}
 		}
-		else if ((rs&this.rvl)||(ds&&this.dvl)) {
-			if (this.ip==inPriority.left) {
-				this.lsl = true;
-			} else {
-				this.lsl = true;
-			}
+		
+		if (this.ins&&this.ins0) {
+			ls = true;
+			us = true;
+		} else if (this.ins||this.ins0) {
+			if (this.ip==inPriority.left) us = true;
+			else ls = true;
 		}
 		TOutSignal output = new TOutSignal(rd, rv, dd, dv, us, ls);
+		//case 0: no input, do nothing
+		
+		//case 2: 2 input
+		if (uv&&!us&&lv&&!ls) {
+			
+			if (this.ip== inPriority.up) {
+				this.odl = ud;
+				this.ovl = uv;
+				this.odl0 = ld;
+				this.ovl0= lv;
+			}
+			else {
+				this.odl = ld;
+				//System.out.println(this.odl);
+				this.ovl = lv;
+				this.odl0 = ud;
+				//System.out.println(this.odl0);
+				this.ovl0= uv;
+			}
+		}
+		//case 1: 1 input
+		else if ((uv&&!us)^(lv&&ls)) {
+					
+						if (this.ovl) {
+							this.odl = uv?ud:ld;
+							this.ovl = true;
+						} else {
+							this.odl0 = uv?ud:ld;
+							this.ovl0 = true;
+						}
+			} 
+		//backpressure
+		if (rs&this.ovl&ds&this.ovl0) {
+			this.ins = true;
+			this.ins0 = true;
+		} else if (this.ovl0&(rs||ds)) {
+			this.ins0 = true;
+		}
+		
+		
 		return output;
 	}
 	
