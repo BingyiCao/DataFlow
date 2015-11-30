@@ -41,7 +41,7 @@ public class ProcessingUnit {
 		if (!ins && inv) {
 			this.pdl= ind;
 			this.pvl=inv;
-			if (ind>this.val){
+			if (ind==this.val){//conditions, changeme
 				this.tdl = ind;
 				this.tvl = inv;
 			}

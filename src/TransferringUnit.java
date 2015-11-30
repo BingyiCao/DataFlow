@@ -138,7 +138,9 @@ public class TransferringUnit {
 		}
 		//case 1: 1 input
 		//else if ((uv&&!us)^(lv&&ls)) {
-		else if ((!this.ovl^!this.ovl0)&&(uv||lv)){
+		//else if ((!this.ovl^!this.ovl0)&&(uv||lv)){
+		else if ((!this.ovl||!this.ovl0)&&(uv||lv)){
+			System.out.println("one input");
 			//System.out.println("we are here");
 					/*	if (this.ovl) {
 							
