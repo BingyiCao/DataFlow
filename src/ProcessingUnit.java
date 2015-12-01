@@ -55,7 +55,7 @@ public class ProcessingUnit {
 		
 		if (this.invl && this.counter==0 && this.indl==this.val) {//conditions changeme
 			if (!this.pvl&&!this.tvl) {
-				System.out.println("hohofirst");
+				//System.out.println("hohofirst");
 				this.counter++;
 				this.pdl = this.indl;
 				this.tdl=this.indl;
@@ -66,7 +66,7 @@ public class ProcessingUnit {
 		}
 		} else if (this.invl&& this.counter ==1 && this.lasttvl) {
 			if (!this.pvl&&!this.tvl) {
-				System.out.println("hoho");
+				//System.out.println("hoho");
 
 				this.counter++;
 				this.pdl = this.indl;

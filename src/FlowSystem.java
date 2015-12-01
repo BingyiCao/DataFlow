@@ -151,14 +151,27 @@ public class FlowSystem {
 			}
 			tout = nexttout;
 			pout = nextpout;
-			 System.out.println("processing line situation");
-			 for (int i=0; i<depth; i++)
-				 System.out.printf("%b %d ", pout[i].pv, pout[i].pd);
-			 System.out.println();
+			// System.out.println();
+			 for (int i=0; i<depth; i++) {
+				 System.err.printf("p=%b %d, ", pout[i].pv, pout[i].pd);
+			 }
+			 System.err.println();
+			 for (int i=0; i<depth; i++) {
+			 System.err.printf("t=%b %d, ", pout[i].tv, pout[i].td);
+			 }
+			 System.err.println();
 			 System.out.println("transferring line situation");
 			for (int i = 0; i < width; i++) {
 				for (int j = 0; j < depth; j++) {
-					System.out.printf("%b %d ", tout[i][j].rv, tout[i][j].rd);
+					if (!tout[i][j].rv) System.out.printf("r=%b %d, ", tout[i][j].rv, tout[i][j].rd);
+					else System.err.printf("r=%b %d, ", tout[i][j].rv, tout[i][j].rd);
+					
+
+				}
+				System.out.println();
+				for (int j = 0; j < depth; j++) {
+					if (!tout[i][j].dv) System.out.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
+					else System.err.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
 				}
 				System.out.println();
 				if (tout[i][depth - 1].rv) {
@@ -172,7 +185,9 @@ public class FlowSystem {
 			if (rclk%2==0) {
 				Line = br.readLine();
 				//System.out.println(Line);
+				
 			}
+			System.out.println();
 
 		}
 
