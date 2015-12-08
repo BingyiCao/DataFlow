@@ -75,27 +75,31 @@ public class TransferringUnit {
 				this.uptoright = false;
 			}
 		} else {
-			if (this.cup==3) {
-				this.cup=0;
-				this.uptoright = false;
-			}
+			//if (this.cup==3) {
+				//this.cup=0;
+				//this.uptoright = false;
+			//}
 		}
 		if (!this.leftv&&lv) {
+			//System.out.println(ld);
 			this.left= ld;
 			this.leftv = lv;
 			this.cleft++;
 			if (this.cleft==4)  {
+				//System.out.println("clear cleft to 1");
 				this.cleft=1;
 				this.lefttoright = false;
 			}
 		} else {
-			if (this.cleft==3) {
-				this.cleft=0;
-				this.lefttoright = false;
-			}
+			//if (this.cleft==3) {
+				//this.cleft=0;
+				//this.lefttoright = false;
+			//}
 		}
-		if (this.cleft==0) {
-			if (this.cup==1) {
+		//if (this.cleft==0) {
+		//System.out.printf("%d %b %d %d\n",this.left, this.leftv, this.cleft, this.cup);
+		if (!this.leftv) {
+			if (this.cup==1&&this.upv) {
 				if (this.op==outPriority.right) {
 					if (!this.rightv) {
 						this.right=this.up;
@@ -121,7 +125,7 @@ public class TransferringUnit {
 						this.uptoright = true;
 					}
 				}
-			} else {
+			} else if (this.upv){
 				if (this.uptoright) {
 					if (!this.rightv) {
 						this.right=this.up;
@@ -138,15 +142,15 @@ public class TransferringUnit {
 				}
 			}
 		}
-		else if (this.cleft==1) {
-			if (this.cup==0) {
+		else if (this.cleft==1&&this.leftv) {
+			if (this.cup==0||!this.upv) {
 				if (this.op==outPriority.right) {
 					if (!this.rightv) {
 						this.right=this.left;
 						this.rightv=this.leftv;
 						this.leftv=false;
 						this.lefttoright = true;
-						System.out.println("first");
+					//	System.out.println("first");
 					}
 					else if (!this.downv) {
 						this.down=this.left;
@@ -164,11 +168,11 @@ public class TransferringUnit {
 						this.rightv=this.leftv;
 						this.leftv=false;
 						this.lefttoright = true;
-						System.out.println("second");
+					//	System.out.println("second");
 					}
 				}
 			}
-			else if (this.cup==1) {
+			else if (this.cup==1&&this.upv) {
 				if (this.ip==inPriority.left) {
 					if (this.op==outPriority.right) {
 						if (!this.rightv) {
@@ -176,7 +180,7 @@ public class TransferringUnit {
 							this.rightv=this.leftv;
 							this.leftv=false;
 							this.lefttoright = true;
-							System.out.println("third");
+						//	System.out.println("third");
 							if (!this.downv) {
 								this.down=this.up;
 								this.downv =this.upv;
@@ -205,7 +209,7 @@ public class TransferringUnit {
 							this.rightv=this.leftv;
 							this.leftv=false;
 							this.lefttoright = true;
-							System.out.println("fourth");
+							//System.out.println("fourth");
 						}
 					}
 				}
@@ -238,7 +242,7 @@ public class TransferringUnit {
 								this.rightv=this.leftv;
 								this.leftv=false;
 								this.lefttoright = true;
-								System.out.println("fifth");
+								//System.out.println("fifth");
 							}
 						} else if (!this.rightv) {
 							this.right=this.up;
@@ -249,7 +253,7 @@ public class TransferringUnit {
 					}
 				}
 			}
-			else if (this.cup>=2) {
+			else if (this.cup>=2&&this.upv) {
 				if (this.uptoright) {
 					//System.out.println(this.lefttoright);
 					if (!this.rightv) {
@@ -275,17 +279,17 @@ public class TransferringUnit {
 						this.leftv = false;
 						if (this.cleft==1)
 						this.lefttoright = true;
-						System.out.println("sixth");
+						//System.out.println("sixth");
 					}
 				}
 			}
 		}
-		else if (this.cleft>1) {
-			System.out.println("we are at the left following stage");
-			System.out.println(this.lefttoright);
-			System.out.println(this.left);
-			System.out.println(this.cup);
-			System.out.println(this.cleft);
+		else if (this.cleft>1&&this.leftv) {
+			//System.out.println("we are at the left following stage");
+			//System.out.println(this.lefttoright);
+			//System.out.println(this.left);
+			//System.out.println(this.cup);
+			//System.out.println(this.cleft);
 			if (this.lefttoright) {
 				if (!this.rightv) {
 					this.right = this.left;
@@ -303,7 +307,7 @@ public class TransferringUnit {
 				if (!this.downv) {
 					this.down = this.left;
 					this.downv = this.leftv;
-					this.leftv = true;
+					this.leftv = false;
 				}
 				if (!this.rightv) {
 					this.right = this.up;
