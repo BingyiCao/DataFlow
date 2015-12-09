@@ -72,7 +72,7 @@ public class FlowSystem {
 		int clk = 0;
 		int rclk = 0;
 		int lastcounter = -1;
-		while (clk < 50) {
+		while (clk < 24) {
 			clk = clk + 1;
 			System.out.printf("Clock Cycle %d\n", clk);
 			if (!pout[0].ins) {
@@ -193,7 +193,3 @@ public class FlowSystem {
 
 	}
 }
-
-// public TOutSignal ClockCycle(int ud, boolean uv, int ld, boolean lv, boolean
-// rs, boolean ds) {
-

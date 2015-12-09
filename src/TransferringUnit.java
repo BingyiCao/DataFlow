@@ -1,22 +1,33 @@
-
 public class TransferringUnit {
-	int odl;
-	boolean ovl;
-	int odl0;
-	boolean ovl0;
-	int out0;
-	boolean out0v;
-	int out1;
-	boolean out1v;
+	int left;
+	boolean leftv;
+	int up;
+	boolean upv;
+	int down;
+	boolean downv;
+	int right;
+	boolean rightv;
+	boolean uptoright;
+	boolean lefttoright;
+	int cup;
+	int cleft;
 	
 	inPriority ip;
 	outPriority op;
 	
 	public TransferringUnit() {
-		this.ovl0 = false;
-		this.ovl0 = false;
-		this.out0v = false;
-		this.out1v = false;
+		this.left = 0;
+		this.leftv= false;
+		this.up = 0;
+		this.upv= false;
+		this.right=0;
+		this.rightv = false;
+		this.down = 0;
+		this.downv = false;
+		this.cup=0;
+		this.cleft=0;
+		this.lefttoright = false;
+		this.uptoright = false;
 		this.ip = inPriority.left;
 		this.op = outPriority.right;
 	}
@@ -35,184 +46,283 @@ public class TransferringUnit {
 		boolean dv = false;
 		boolean us = false;
 		boolean ls = false;
-		//System.out.println(this.out0);
-		//System.out.println(this.out1);
-		//System.out.println(this.ovl);
-		//System.out.println(this.ovl0);
-		//System.out.println(this.odl0);
-		if (this.op == outPriority.right) {
-			if (!rs) {
-			if (this.out0v) {
-				rd = this.out0;
-				rv = this.out0v;
-				this.out0v = false;
-				if (!ds && this.out1v) {
-					dd = this.out1;
-					dv = this.out1v;
-					this.out1v = false;
-				} 
+		//transfer output first
+		
+		if (!rs&&this.rightv)	{
+			rd = this.right;
+			rv = this.rightv;
+			this.rightv = false;
+		}
+		if (!ds && this.downv) {
+			dd = this.down;
+			dv = this.downv;
+			this.downv = false;
+		}
+		//backpressure assert
+		if (this.upv) us = true;
+		if (this.leftv) ls = true;
+		
+		TOutSignal output = new TOutSignal(rd, rv, dd, dv, us, ls);
+		//input process
+		
+		if (!this.upv&&uv) {
+			this.up = ud;
+			this.upv = uv;
+			this.cup ++;
+			if (this.cup==4)  {
+				this.cup =1;
+				this.uptoright = false;
 			}
-			else {
-				rd = this.out1;
-				rv = this.out1v;
-				this.out1v = false;
+		} else {
+			//if (this.cup==3) {
+				//this.cup=0;
+				//this.uptoright = false;
+			//}
+		}
+		if (!this.leftv&&lv) {
+			//System.out.println(ld);
+			this.left= ld;
+			this.leftv = lv;
+			this.cleft++;
+			if (this.cleft==4)  {
+				//System.out.println("clear cleft to 1");
+				this.cleft=1;
+				this.lefttoright = false;
 			}
-			}
-			else if (!ds){
-				if (this.out0v) {
-					//System.out.println("we are here");
-					dd = this.out0;
-					dv = this.out0v;
-					this.out0v = false;
+		} else {
+			//if (this.cleft==3) {
+				//this.cleft=0;
+				//this.lefttoright = false;
+			//}
+		}
+		//if (this.cleft==0) {
+		//System.out.printf("%d %b %d %d\n",this.left, this.leftv, this.cleft, this.cup);
+		if (!this.leftv) {
+			if (this.cup==1&&this.upv) {
+				if (this.op==outPriority.right) {
+					if (!this.rightv) {
+						this.right=this.up;
+						this.rightv=this.upv;
+						this.upv=false;
+						this.uptoright = true;
+					}
+					else if (!this.downv) {
+						this.down=this.up;
+						this.downv =this.upv;
+						this.upv = false;
+					}
 				}
 				else {
-					dd = this.out1;
-					dv = this.out1v;
-					this.out1v = false;
+					if (!this.downv) {
+						this.down=this.up;
+						this.downv =this.upv;
+						this.upv = false;
+					} else if (!this.rightv) {
+						this.right=this.up;
+						this.rightv=this.upv;
+						this.upv=false;
+						this.uptoright = true;
+					}
+				}
+			} else if (this.upv){
+				if (this.uptoright) {
+					if (!this.rightv) {
+						this.right=this.up;
+						this.rightv=this.upv;
+						this.upv=false;
+					}
+				}
+				else {
+					if (!this.downv) {
+						this.down=this.up;
+						this.downv =this.upv;
+						this.upv = false;
+					}
 				}
 			}
 		}
-		else {
-			if (!ds) {
-				if (this.out0v) {
-					dd = this.out0;
-					dv = this.out0v;
-					this.out0v = false;
-					if (!rs && this.out1v) {
-						rd = this.out1;
-						rv = this.out1v;
-						this.out1v = false;
-					} 
+		else if (this.cleft==1&&this.leftv) {
+			if (this.cup==0||!this.upv) {
+				if (this.op==outPriority.right) {
+					if (!this.rightv) {
+						this.right=this.left;
+						this.rightv=this.leftv;
+						this.leftv=false;
+						this.lefttoright = true;
+					//	System.out.println("first");
+					}
+					else if (!this.downv) {
+						this.down=this.left;
+						this.downv =this.leftv;
+						this.leftv = false;
+					}
 				}
 				else {
-					dd = this.out1;
-					dv = this.out1v;
-					this.out1v = false;
+					if (!this.downv) {
+						this.down=this.left;
+						this.downv =this.leftv;
+						this.leftv = false;
+					} else if (!this.rightv) {
+						this.right=this.left;
+						this.rightv=this.leftv;
+						this.leftv=false;
+						this.lefttoright = true;
+					//	System.out.println("second");
+					}
 				}
-				}
-				else if (!rs){
-					if (this.out0v) {
-						rd = this.out0;
-						rv = this.out0v;
-						this.out0v = false;
+			}
+			else if (this.cup==1&&this.upv) {
+				if (this.ip==inPriority.left) {
+					if (this.op==outPriority.right) {
+						if (!this.rightv) {
+							this.right=this.left;
+							this.rightv=this.leftv;
+							this.leftv=false;
+							this.lefttoright = true;
+						//	System.out.println("third");
+							if (!this.downv) {
+								this.down=this.up;
+								this.downv =this.upv;
+								this.upv = false;
+							}
+						}
+						else if (!this.downv) {
+							this.down=this.left;
+							this.downv =this.leftv;
+							this.leftv = false;
+						}
 					}
 					else {
-						rd = this.out1;
-						rv = this.out1v;
-						this.out1v = false;
+						if (!this.downv) {
+							this.down=this.left;
+							this.downv =this.leftv;
+							this.leftv = false;
+							if (!this.rightv) {
+								this.right=this.up;
+								this.rightv=this.upv;
+								this.upv=false;
+								this.uptoright = true;
+							}
+						} else if (!this.rightv) {
+							this.right=this.left;
+							this.rightv=this.leftv;
+							this.leftv=false;
+							this.lefttoright = true;
+							//System.out.println("fourth");
+						}
 					}
 				}
+				else {//in priority = up
+					if (this.op==outPriority.right) {
+						if (!this.upv) {
+							this.right=this.up;
+							this.rightv=this.upv;
+							this.upv=false;
+							this.uptoright = true;
+							if (!this.downv) {
+								this.down=this.left;
+								this.downv =this.leftv;
+								this.leftv = false;
+							}
+						}
+						else if (!this.downv) {
+							this.down=this.up;
+							this.downv =this.upv;
+							this.upv = false;
+						}
+					}
+					else {
+						if (!this.downv) {
+							this.down=this.up;
+							this.downv =this.upv;
+							this.upv = false;
+							if (!this.rightv) {
+								this.right=this.left;
+								this.rightv=this.leftv;
+								this.leftv=false;
+								this.lefttoright = true;
+								//System.out.println("fifth");
+							}
+						} else if (!this.rightv) {
+							this.right=this.up;
+							this.rightv=this.upv;
+							this.upv=false;
+							this.uptoright = true;
+						}
+					}
+				}
+			}
+			else if (this.cup>=2&&this.upv) {
+				if (this.uptoright) {
+					//System.out.println(this.lefttoright);
+					if (!this.rightv) {
+						this.right = this.up;
+						this.rightv = this.upv;
+						this.upv = false;
+					}
+					if (!this.downv) {
+						this.down = this.left;
+						this.downv = this.leftv;
+						this.leftv = false;
+					}
+				}
+				else {
+					if (!this.downv) {
+						this.down=this.up;
+						this.downv = this.upv;
+						this.upv = false;
+					}
+					if (!this.rightv) {
+						this.right = this.left;
+						this.rightv = this.leftv;
+						this.leftv = false;
+						if (this.cleft==1)
+						this.lefttoright = true;
+						//System.out.println("sixth");
+					}
+				}
+			}
 		}
-		
-		
-		
-	//	System.out.println(this.ins);
-	//	System.out.println(this.ins0);
-		if (this.ovl&&this.ovl0) {
-			ls = true;
-			us = true;
-		} else if (this.ovl||this.ovl0) {
-			if (this.ip==inPriority.left) us = true;
-			else ls = true;
-		}
-		TOutSignal output = new TOutSignal(rd, rv, dd, dv, us, ls);
-		//case 0: no input, do nothing
-		
-		//case 2: 2 input
-		if (uv&&!this.ovl&&lv&&!this.ovl0) {
-			
-			if (this.ip== inPriority.up) {
-				this.odl = ud;
-				this.ovl = uv;
-				this.odl0 = ld;
-				this.ovl0= lv;
+		else if (this.cleft>1&&this.leftv) {
+			//System.out.println("we are at the left following stage");
+			//System.out.println(this.lefttoright);
+			//System.out.println(this.left);
+			//System.out.println(this.cup);
+			//System.out.println(this.cleft);
+			if (this.lefttoright) {
+				if (!this.rightv) {
+					this.right = this.left;
+					this.rightv = this.leftv;
+					this.leftv = false;
+				}
+				if (!this.downv) {
+					this.down=this.up;
+					this.downv = this.upv;
+					this.upv = false;
+				}
 			}
 			else {
-				this.odl = ld;
-				//System.out.println(this.odl);
-				this.ovl = lv;
-				this.odl0 = ud;
-				//System.out.println(this.odl0);
-				this.ovl0= uv;
+				
+				if (!this.downv) {
+					this.down = this.left;
+					this.downv = this.leftv;
+					this.leftv = false;
+				}
+				if (!this.rightv) {
+					this.right = this.up;
+					this.rightv = this.upv;
+					this.upv = false;
+					if (this.cup==1)
+					this.uptoright = true;
+				}
 			}
 		}
-		//case 1: 1 input
-		//else if ((uv&&!us)^(lv&&ls)) {
-		//else if ((!this.ovl^!this.ovl0)&&(uv||lv)){
-		else if ((!this.ovl||!this.ovl0)&&(uv||lv)){
-			//System.out.println("one input");
-			//System.out.println("we are here");
-					/*	if (this.ovl) {
-							
-							this.odl = uv?ud:ld;
-							this.ovl = true;
-						} else {
-							this.odl0 = uv?ud:ld;
-							this.ovl0 = true;
-						}*/
-			
-				if (!this.ovl0) {
-					if (uv^lv) {
-						this.odl0 = uv?ud:ld;
-						this.ovl0 = true;
-					}
-					else if (this.ip==inPriority.left) {
-						this.odl0 = ld;
-						this.ovl0 = true;
-					} else {
-						this.odl0 = ud;
-						this.ovl0 = true;
-					}
-				} else {
-					if (uv^lv) {
-						this.odl = uv?ud:ld;
-						this.ovl = true;
-					}
-					else if (this.ip==inPriority.left) {
-						this.odl = ld;
-						this.ovl = true;
-					} else {
-						this.odl = ud;
-						this.ovl = true;
-					}
-				}
-			} 
-		//System.out.println(this.out0);
-		//System.out.println(this.out1);
 		
-		//backpressure
-		/*if (rs&this.ovl&ds&this.ovl0) {
-			this.ins = true;
-			this.ins0 = true;
-		} else if (this.ovl0&(rs||ds)) {
-			this.ins0 = true;
-		}*/
-		//System.out.println(this.ins);
-		//System.out.println(this.ins0);
-		//System.out.printf("input is %d %d %b %b\n", ud, ld, rs, ds);
+		//if (this.cup==3) this.cup=0;
+		//if (this.cleft==3) this.cleft =0;
 		
-		if (!this.out0v) {
-			if (this.ovl) {
-			this.out0 = this.odl;
-			this.out0v = this.ovl;
-			this.ovl = false;
-			} else if (this.ovl0){
-				this.out1 = this.odl0;
-				this.out1v = this.ovl0;
-				this.ovl0 = false;
-			}
-		} 
-		if (!this.out1v) {
-			if (this.ovl) {
-				this.out0 = this.odl;
-				this.out0v = this.ovl;
-				this.ovl = false;
-				} else if (this.ovl0){
-					this.out1 = this.odl0;
-					this.out1v = this.ovl0;
-					this.ovl0 = false;
-				}
-		}
+		
+		
 		return output;
 	}
 	
