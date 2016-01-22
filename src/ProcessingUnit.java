@@ -53,7 +53,7 @@ public class ProcessingUnit {
 			this.invl = inv;
 		}
 		
-		if (this.invl && this.counter==0 && this.indl==this.val) {//conditions changeme
+		if (this.invl && this.counter==0 && this.indl>=this.val) {//conditions changeme
 			if (!this.pvl&&!this.tvl) {
 				//System.out.println("hohofirst");
 				this.counter++;
@@ -87,9 +87,10 @@ public class ProcessingUnit {
 				this.tvl = true;
 				this.lasttvl = false;
 				this.counter =0;
+				this.invl = true;
 		} 
 		}
-		if (this.invl && this.counter==0 && this.indl!=this.val) {//conditions changeme
+		if (this.invl && this.counter==0 && this.indl<this.val) {//conditions changeme
 			if (!this.pvl) {
 				this.counter++;
 				this.pdl = this.indl;

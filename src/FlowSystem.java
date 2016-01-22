@@ -70,26 +70,26 @@ public class FlowSystem {
 			e.printStackTrace();
 		}
 		int clk = 0;
-		int rclk = 0;
+		//int rclk = 0;
 		int lastcounter = -1;
 		while (clk < 24) {
 			clk = clk + 1;
 			System.out.printf("Clock Cycle %d\n", clk);
 			if (!pout[0].ins) {
-				rclk++;
+				//rclk++;
 				if (Line != null) {
 					String[] tmp = Line.split(" ");
 					int in = 0;
 					// if (pu[0].counter!=lastcounter) {
-					if (rclk == 1) {
+					//if (rclk == 1) {
 						in = Integer.parseInt(tmp[0]);
 						nextpout[0] = pu[0].ClockCycle(in, true, pout[1].ins,
 								tout[0][0].us);
-					} else if (rclk == 2) {
-						in = Integer.parseInt(tmp[1]);
-						nextpout[0] = pu[0].ClockCycle(in, true, pout[1].ins,
-								tout[0][0].us);
-					}
+					//} else if (rclk == 2) {
+						//in = Integer.parseInt(tmp[1]);
+						//nextpout[0] = pu[0].ClockCycle(in, true, pout[1].ins,
+							//	tout[0][0].us);
+					//}
 					// else {
 					// nextpout[0]=pu[0].ClockCycle(0, true,
 					// pout[1].ins,tout[0][0].us);
@@ -108,7 +108,8 @@ public class FlowSystem {
 					nextpout[0] = pu[0].ClockCycle(0, false, pout[1].ins,
 							tout[0][0].us);
 				}
-				if (rclk==2) rclk=0;
+				//if (rclk==2) rclk=0;
+				Line = br.readLine();
 			} else {
 				nextpout[0] = pu[0].ClockCycle(0, false, pout[1].ins,
 						tout[0][0].us);
@@ -182,12 +183,12 @@ public class FlowSystem {
 				}
 			}
 			
-			if (rclk%2==0) {
-				Line = br.readLine();
+			//if (rclk%2==0) {
+				
 				//System.out.println(Line);
 				
-			}
-			System.out.println();
+			//}
+			System.out.println(Line);
 
 		}
 

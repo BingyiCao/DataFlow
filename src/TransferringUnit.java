@@ -41,14 +41,16 @@ public class TransferringUnit {
 	}
 	
 	public TOutSignal ClockCycle(int ud, boolean uv, int ld, boolean lv, boolean rs, boolean ds) {
+		//clear ouput
 		int rd = 0;
 		boolean rv = false;
 		int dd = 0;
 		boolean dv = false;
+		//clear back pressure
 		boolean us = false;
 		boolean ls = false;
-		//transfer output first
 		
+		//transfer output first
 		if (!rs&&this.rightv)	{
 			rd = this.right;
 			rv = this.rightv;
@@ -64,8 +66,8 @@ public class TransferringUnit {
 		if (this.leftv) ls = true;
 		
 		TOutSignal output = new TOutSignal(rd, rv, dd, dv, us, ls);
-		//input process
 		
+		//=============input read in============================
 		if (!this.upv&&uv) {
 			this.up = ud;
 			this.upv = uv;
@@ -74,12 +76,7 @@ public class TransferringUnit {
 				this.cup =1;
 				this.uptoright = false;
 			}
-		} else {
-			//if (this.cup==3) {
-				//this.cup=0;
-				//this.uptoright = false;
-			//}
-		}
+		} 
 		if (!this.leftv&&lv) {
 			//System.out.println(ld);
 			this.left= ld;
@@ -90,16 +87,12 @@ public class TransferringUnit {
 				this.cleft=1;
 				this.lefttoright = false;
 			}
-		} else {
-			//if (this.cleft==3) {
-				//this.cleft=0;
-				//this.lefttoright = false;
-			//}
-		}
-		//if (this.cleft==0) {
-		//System.out.printf("%d %b %d %d\n",this.left, this.leftv, this.cleft, this.cup);
+		} 
+		//========================input read in finish=================
+		
+		//when left register is empty, transfer up register to output register
 		if (!this.leftv) {
-			if (this.cup==1&&this.upv) {
+			if (this.cup==1 && this.upv) {
 				if (this.op==outPriority.right) {
 					if (!this.rightv) {
 						this.right=this.up;
@@ -142,6 +135,8 @@ public class TransferringUnit {
 				}
 			}
 		}
+		
+		// when left register is not empty, transfer input registers to output registers
 		else if (this.cleft==1&&this.leftv) {
 			if (this.cup==0||!this.upv) {
 				if (this.op==outPriority.right) {
@@ -318,9 +313,6 @@ public class TransferringUnit {
 				}
 			}
 		}
-		
-		//if (this.cup==3) this.cup=0;
-		//if (this.cleft==3) this.cleft =0;
 		
 		
 		
