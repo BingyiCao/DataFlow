@@ -2,40 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
+//newest version
 public class FlowSystem {
 
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		/*
-		 * ProcessingUnit pu = new ProcessingUnit(10); public POutSignal
-		 * ClockCycle(int ind, boolean inv, boolean ps, boolean ts)
-		 * System.out.println(pu.ClockCycle(9, true, false, true).print());
-		 * System.out.println(pu.ClockCycle(12, true, false, false).print());
-		 * System.out.println(pu.ClockCycle(15, true, false, true).print());
-		 * System.out.println(pu.ClockCycle(2, true, false, false).print());
-		 * System.out.println(pu.ClockCycle(8, true, false, false).print());
-		 * System.out.println(pu.ClockCycle(20, true, false, false).print());
-		 * System.out.println(pu.ClockCycle(11, true, false, false).print());
-		 * TransferringUnit tu = new TransferringUnit();
-		 * System.out.println(tu.ClockCycle(10, true, 6, true, false,
-		 * false).print()); System.out.println(tu.ClockCycle(15, true, 16, true,
-		 * false, false).print()); System.out.println(tu.ClockCycle(20, true,
-		 * 26, true, true, false).print()); System.out.println(tu.ClockCycle(25,
-		 * true, 36, true, false, false).print());
-		 * System.out.println(tu.ClockCycle(30, true, 46, true, false,
-		 * false).print()); System.out.println(tu.ClockCycle(35, true, 56, true,
-		 * false, false).print()); System.out.println(tu.ClockCycle(40, true,
-		 * 66, true, false, false).print());
-		 * System.out.println(tu.ClockCycle(45, true, 76, true, false,
-		 * false).print()); System.out.println(tu.ClockCycle(50, true, 86, true,
-		 * false, false).print()); System.out.println(tu.ClockCycle(55, true,
-		 * 96, true, false, false).print());
-		 * System.out.println(tu.ClockCycle(60, true, 106, true, false,
-		 * false).print()); System.out.println(tu.ClockCycle(65, true, 116,
-		 * true, false, false).print());
-		 */
-		int depth = 10;
+		int depth = 5;
 		int width = 4;
 		ProcessingUnit[] pu = new ProcessingUnit[depth];
 		TransferringUnit[][] tu = new TransferringUnit[width][depth];
@@ -70,47 +41,30 @@ public class FlowSystem {
 			e.printStackTrace();
 		}
 		int clk = 0;
-		//int rclk = 0;
 		int lastcounter = -1;
 		while (clk < 24) {
 			clk = clk + 1;
 			System.out.printf("Clock Cycle %d\n", clk);
-			if (!pout[0].ins) {
-				//rclk++;
+			//if (!pout[0].ins) {
+			if (!pu[0].invl) {
 				if (Line != null) {
 					String[] tmp = Line.split(" ");
 					int in = 0;
-					// if (pu[0].counter!=lastcounter) {
-					//if (rclk == 1) {
 						in = Integer.parseInt(tmp[0]);
 						nextpout[0] = pu[0].ClockCycle(in, true, pout[1].ins,
 								tout[0][0].us);
-					//} else if (rclk == 2) {
-						//in = Integer.parseInt(tmp[1]);
-						//nextpout[0] = pu[0].ClockCycle(in, true, pout[1].ins,
-							//	tout[0][0].us);
-					//}
-					// else {
-					// nextpout[0]=pu[0].ClockCycle(0, true,
-					// pout[1].ins,tout[0][0].us);
-					// }
-					// } else {
-					// nextpout[0]=pu[0].ClockCycle(0, false,
-					// pout[1].ins,tout[0][0].us);
-					// }
-
-					// } else {
-					// nextpout[0]=pu[0].ClockCycle(0, false,
-					// pout[1].ins,tout[0][0].us);
-					// }
-					// }
+						System.err.printf("     in=%d  ", in);
+					
 				} else {
 					nextpout[0] = pu[0].ClockCycle(0, false, pout[1].ins,
 							tout[0][0].us);
+					System.err.printf("        in=empty  ");
 				}
-				//if (rclk==2) rclk=0;
 				Line = br.readLine();
 			} else {
+				//System.out.println("now we are unable to take any input");
+				System.err.printf("hd=%s ", Line);
+				System.err.printf("inr=%d ", pu[0].indl);
 				nextpout[0] = pu[0].ClockCycle(0, false, pout[1].ins,
 						tout[0][0].us);
 			}
@@ -152,49 +106,48 @@ public class FlowSystem {
 			}
 			tout = nexttout;
 			pout = nextpout;
-			// System.out.println();
+			 //System.out.println();
+			 //System.err.printf("in=%s ", Line);
 			 for (int i=0; i<depth; i++) {
 				 System.err.printf("p=%b %d, ", pout[i].pv, pout[i].pd);
 			 }
 			 System.err.println();
+			 System.err.printf("            ");
 			 for (int i=0; i<depth; i++) {
 			 System.err.printf("t=%b %d, ", pout[i].tv, pout[i].td);
 			 }
 			 System.err.println();
 			 System.out.println("transferring line situation");
+			 
+			// System.out.printf("r=%b %d, ", tout[0][0].rv, tout[0][0].rd);
+			// System.out.printf("%d ", pu[0].counter);
+			// System.out.println();
+			// System.out.printf("d=%b %d, ", tout[0][0].dv, tout[0][0].dd);
+			 System.out.println();
+			
 			for (int i = 0; i < width; i++) {
+				 System.out.printf("            ");
 				for (int j = 0; j < depth; j++) {
 					if (!tout[i][j].rv) System.out.printf("r=%b %d, ", tout[i][j].rv, tout[i][j].rd);
 					else System.err.printf("r=%b %d, ", tout[i][j].rv, tout[i][j].rd);
 					
-
 				}
 				System.out.println();
+				 System.out.printf("            ");
 				for (int j = 0; j < depth; j++) {
-					if (!tout[i][j].dv) System.out.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
-					else System.err.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
+					//if (!tout[i][j].dv) 
+					System.out.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
+					//else System.err.printf("d=%b %d, ", tout[i][j].dv, tout[i][j].dd);
 				}
 				System.out.println();
 				if (tout[i][depth - 1].rv) {
-					// System.out.println("haha");
-					// System.out.printf("%b %d\n", tout[i][depth-1].rv,
-					// tout[i][depth-1].rd);
-					// System.out.println(tout[i][depth-1].rd);
 				}
 			}
+//			System.out.println(Line);
 			
-			//if (rclk%2==0) {
-				
-				//System.out.println(Line);
-				
-			//}
-			System.out.println(Line);
-
 		}
 
 	}
 }
 
-// public TOutSignal ClockCycle(int ud, boolean uv, int ld, boolean lv, boolean
-// rs, boolean ds) {
 
