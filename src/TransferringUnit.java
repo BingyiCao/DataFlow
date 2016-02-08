@@ -1,4 +1,3 @@
-
 public class TransferringUnit {
 	int left;
 	boolean leftv;
